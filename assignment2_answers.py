@@ -50,7 +50,7 @@ countries = ['United Kingdom', 'India', 'Japan', 'China', 'Korea, Rep.',
 df_countries = df_climt_chg[df_climt_chg['Country Name'].isin(countries)]
 
 #Select records for specific indicators
-indecators = ['Urban population', 'Population, total', 'CO2 emissions (kt)']
+indecators = ['Urban population', 'Population, total', 'CO2 emissions (kt)', 'Forest area (% of land area)']
 df_cntry_ind = df_countries[df_countries['Indicator Name'].isin(indecators)]
 #Select only columns after year 1990
 df_cntry_yrs = df_cntry_ind.loc[:,['Country Name', 'Indicator Name', '1990', '1991', '1992',	
@@ -59,7 +59,7 @@ df_cntry_yrs = df_cntry_ind.loc[:,['Country Name', 'Indicator Name', '1990', '19
                                     '2007', '2008', '2009', '2010', '2011', '2012', '2013',
                                     '2014', '2015', '2016', '2017', '2018', '2019', '2020']]
 
-#Replace NaN values with mean
+#Replace NaN values with preceding row value
 df_cntry_yrs = df_cntry_yrs.fillna(method='ffill', axis=1)
 
 #Select data in 5 year intervals 
@@ -73,6 +73,7 @@ df_fnl.replace("United States", "USA", inplace=True)
 df_fnl.replace("South Africa", "SA", inplace=True)
 df_fnl.replace("Korea, Rep.", "Korea", inplace=True)
 
+### START: Plot bar graph against urban population
 #Plot bar chart against indicator Urban population
 df_urbn_pop = df_fnl[df_fnl['Indicator Name'] == 'Urban population']
 
@@ -92,7 +93,9 @@ plt.legend(title ="Years")
 # save plot as .png
 plt.savefig('Urban Population Over Time.png')
 plt.show()
+### END: Plot bar graph against urban population
 
+### START: Plot bar graph against CO2 emission
 #Plot bar chart against indicator CO2 emmision
 df_co2_emsn = df_fnl[df_fnl['Indicator Name'] == 'CO2 emissions (kt)']
 
@@ -111,4 +114,35 @@ plt.legend(title ="Years", loc='upper right', bbox_to_anchor =(0.8, 1, 0.3, 0))
 
 # save plot as .png
 plt.savefig('CO2 emission Over Time.png')
+plt.show()
+### END: Plot bar graph against CO2 emission
+
+### START: Line chart to illustrate population growth over a time period
+# create a new figure
+plt.figure(figsize=(8,5))
+# add a stylesheet
+plt.style.use('ggplot')
+# adding a title to the plot
+plt.title('Forest Area')
+# plot the grapgh
+df_ln_plot = df_fnl[df_fnl['Indicator Name'] == 'Forest area (% of land area)']
+df_ln_plot = df_ln_plot.loc[:,['Country Name', '1990', '1995', '2000', '2005', '2010', '2015', '2020']]
+df_ln_plot_tp = df_ln_plot.set_index('Country Name').transpose()
+df_ln_plot_tp['Year'] = df_ln_plot_tp.index
+# plot the grapgh
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.China,  label = 'China')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.India,  label = 'India')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.USA,  label = 'USA')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.UK,  label = 'UK')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.France,  label = 'France')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.Germany,  label = 'Germany')
+#plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.Japan,  label = 'Japan')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.SA,  label = 'SA')
+plt.xticks(df_ln_plot_tp.Year)
+# labeling the graph
+plt.xlabel('Year')
+plt.ylabel('SQ(KM)')
+plt.legend(loc = 'lower right', title ="Countries")
+# save plot as .png
+plt.savefig('Forest Area.png', dpi=300)
 plt.show()
