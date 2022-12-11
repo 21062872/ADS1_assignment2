@@ -45,8 +45,8 @@ def read_external_files(filename):
 df_climt_chg, df_climt_chg_tp = read_external_files('API_19_DS2_en_csv_v2_4700503.csv')    
 
 #Select few countries representing all continets from the dataset
-countries = ['United Kingdom', 'India', 'Japan', 'China', 'Australia',
-             'South Africa', 'United States', 'United Arab Emirates', 'Brazil', 'Italy']
+countries = ['United Kingdom', 'India', 'Japan', 'China', 'Korea, Rep.',
+             'South Africa', 'United States', 'Korea, Rep.', 'Germany', 'France']
 df_countries = df_climt_chg[df_climt_chg['Country Name'].isin(countries)]
 
 #Select records for specific indicators
@@ -59,16 +59,56 @@ df_cntry_yrs = df_cntry_ind.loc[:,['Country Name', 'Indicator Name', '1990', '19
                                     '2007', '2008', '2009', '2010', '2011', '2012', '2013',
                                     '2014', '2015', '2016', '2017', '2018', '2019', '2020']]
 
+#Replace NaN values with mean
+df_cntry_yrs = df_cntry_yrs.fillna(method='ffill', axis=1)
+
 #Select data in 5 year intervals 
 df_cntry_ind_hdr = df_cntry_yrs.iloc[:,[0,1]]
 df_yrs_five_intr = df_cntry_yrs.iloc[:,2::5]
 df_fnl = pd.concat([df_cntry_ind_hdr,df_yrs_five_intr], axis=1)
-#Replace NaN values with mean
-df_cntry_yrs['2020'].fillna(value=df_cntry_yrs['2020'].mean(), inplace=True)
 
-#Plot bar chart against indecator Urban population
-df_urbn_pop = df_cntry_yrs[df_cntry_yrs['Indicator Name'] == 'Urban population']
-plt.figure()
-plt.style.use('ggplot')
+#Rename countries with shortnames for better clarity of labels
+df_fnl.replace("United Kingdom", "UK", inplace=True)
+df_fnl.replace("United States", "USA", inplace=True)
+df_fnl.replace("South Africa", "SA", inplace=True)
+df_fnl.replace("Korea, Rep.", "Korea", inplace=True)
+
+#Plot bar chart against indicator Urban population
+df_urbn_pop = df_fnl[df_fnl['Indicator Name'] == 'Urban population']
+
 # plotting graph
-df_urbn_pop.plot(x="Country Name", y=["1990", "1991"], kind='bar')
+plt.figure(figsize=(8, 6), dpi=80)
+plt.style.use('ggplot')
+# plot grouped bar chart
+df_urbn_pop.plot(x='Country Name',
+                kind='bar',
+                stacked=False,
+                title='Urban Population Over Time')
+# labeling the graph
+plt.xlabel('Country')
+plt.ylabel('Number of population')
+plt.legend(title ="Years")
+
+# save plot as .png
+plt.savefig('Urban Population Over Time.png')
+plt.show()
+
+#Plot bar chart against indicator CO2 emmision
+df_co2_emsn = df_fnl[df_fnl['Indicator Name'] == 'CO2 emissions (kt)']
+
+# plotting graph
+plt.figure(figsize=(8, 6), dpi=80)
+plt.style.use('ggplot')
+# plot grouped bar chart
+df_co2_emsn.plot(x='Country Name',
+                kind='bar',
+                stacked=False,
+                title='CO2 emission Over Time')
+# labeling the graph
+plt.xlabel('Country')
+plt.ylabel('CO2 emission')
+plt.legend(title ="Years", loc='upper right', bbox_to_anchor =(0.8, 1, 0.3, 0))
+
+# save plot as .png
+plt.savefig('CO2 emission Over Time.png')
+plt.show()
