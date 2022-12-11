@@ -40,13 +40,20 @@ def read_external_files(filename):
     else:
         raise Exception("Invalid File Format")
     return df_climt_chg, df_climt_chg_tp
+
+def calculateAutoPct(values):
+    '''Calculate percentage of portion
+        Used for labeling the pie chart'''
+    def autopct(pct):
+        return '{p:.2f}%'.format(p=pct)
+    return autopct
    
 #Executing the function to load external file to dataframe     
 df_climt_chg, df_climt_chg_tp = read_external_files('API_19_DS2_en_csv_v2_4700503.csv')    
 
 #Select few countries representing all continets from the dataset
 countries = ['United Kingdom', 'India', 'Japan', 'China', 'Korea, Rep.',
-             'South Africa', 'United States', 'Korea, Rep.', 'Germany', 'France']
+             'South Africa', 'United States', 'Korea, Rep.', 'Germany']
 df_countries = df_climt_chg[df_climt_chg['Country Name'].isin(countries)]
 
 #Select records for specific indicators
@@ -134,9 +141,8 @@ plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.China,  label = 'China')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.India,  label = 'India')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.USA,  label = 'USA')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.UK,  label = 'UK')
-plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.France,  label = 'France')
+#plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.France,  label = 'France')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.Germany,  label = 'Germany')
-#plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.Japan,  label = 'Japan')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.SA,  label = 'SA')
 plt.xticks(df_ln_plot_tp.Year)
 # labeling the graph
@@ -145,4 +151,30 @@ plt.ylabel('SQ(KM)')
 plt.legend(loc = 'lower right', title ="Countries")
 # save plot as .png
 plt.savefig('Forest Area.png', dpi=300)
+plt.show()
+### END: Line chart to illustrate population growth over a time period
+
+### START: Pie chart to illustrate portion of CO2 emission
+df_co2_emsn_pc = df_fnl[df_fnl['Indicator Name'] == 'CO2 emissions (kt)']
+df_co2_emsn_pc = df_co2_emsn_pc.loc[:, ['Country Name', '2020']]
+
+# defining color list for pie chart
+colors = ("red", "cyan","Yellow", 'green', '#a87d32', '#57094a', '#808dd1', '#a8c236')
+
+# wedge properties
+wp = { 'linewidth' : 1, 'edgecolor' : "green" }
+
+# creating plot
+plt.figure(figsize=(8,5))
+plt.pie(df_co2_emsn_pc['2020'], labels=df_co2_emsn_pc['Country Name'], shadow = True, colors=colors,  \
+        startangle = 90, wedgeprops = wp, autopct=calculateAutoPct(df_co2_emsn_pc['2020']))
+# adding legend
+plt.legend(
+              title ="CO2 emission",
+              loc ="lower left",
+              bbox_to_anchor =(1.1, 0, 0.5, 1)
+          )   
+plt.tight_layout()
+plt.title("CO2 emission in 2022")
+plt.savefig('CO2 emission in 2022.png', dpi=300)
 plt.show()
