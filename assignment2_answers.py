@@ -52,13 +52,17 @@ df_countries = df_climt_chg[df_climt_chg['Country Name'].isin(countries)]
 #Select records for specific indicators
 indecators = ['Urban population', 'Population, total', 'CO2 emissions (kt)']
 df_cntry_ind = df_countries[df_countries['Indicator Name'].isin(indecators)]
-
 #Select only columns after year 1990
-df_cntry_yrs = df_cntry_ind[['Country Name', 'Indicator Name', '1990', '1991', '1992',	
-                             '1993', '1994', '1995', '1996', '1997', '1998', '1999',
-                             '2000', '2001', '2002', '2003', '2004', '2005', '2006',
-                             '2007', '2008', '2009', '2010', '2011', '2012', '2013',
-                             '2014', '2015', '2016', '2017', '2018', '2019', '2020']]
+df_cntry_yrs = df_cntry_ind.loc[:,['Country Name', 'Indicator Name', '1990', '1991', '1992',	
+                                    '1993', '1994', '1995', '1996', '1997', '1998', '1999',
+                                    '2000', '2001', '2002', '2003', '2004', '2005', '2006',
+                                    '2007', '2008', '2009', '2010', '2011', '2012', '2013',
+                                    '2014', '2015', '2016', '2017', '2018', '2019', '2020']]
+
+#Select data in 5 year intervals 
+df_cntry_ind_hdr = df_cntry_yrs.iloc[:,[0,1]]
+df_yrs_five_intr = df_cntry_yrs.iloc[:,2::5]
+df_fnl = pd.concat([df_cntry_ind_hdr,df_yrs_five_intr], axis=1)
 #Replace NaN values with mean
 df_cntry_yrs['2020'].fillna(value=df_cntry_yrs['2020'].mean(), inplace=True)
 
