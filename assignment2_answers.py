@@ -141,7 +141,6 @@ plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.China,  label = 'China')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.India,  label = 'India')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.USA,  label = 'USA')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.UK,  label = 'UK')
-#plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.France,  label = 'France')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.Germany,  label = 'Germany')
 plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.SA,  label = 'SA')
 plt.xticks(df_ln_plot_tp.Year)
@@ -178,3 +177,73 @@ plt.tight_layout()
 plt.title("CO2 emission in 2022")
 plt.savefig('CO2 emission in 2022.png', dpi=300)
 plt.show()
+
+#Derive statistics
+co2_mean = df_co2_emsn_pc['2020'].mean()
+print('\nAverage of CO2 emission in 2022:', round(co2_mean,2))
+
+co2_max = df_co2_emsn_pc['2020'].max()
+print('\nMaximum portion of CO2 emission in 2022:', round(co2_max,2))
+
+co2_min = df_co2_emsn_pc['2020'].min()
+print('\nMinimum portion of CO2 emission in 2022:', round(co2_min,2))
+
+co2_sum = df_co2_emsn_pc['2020'].sum()
+print('\nTotal CO2 emission in 2022:', round(co2_sum,2))
+
+### END: Pie chart to illustrate portion of CO2 emission
+
+### START: Plot Co2 emission across years in total
+df_co2_emsn_tot = df_fnl[df_fnl['Indicator Name'] == 'CO2 emissions (kt)']
+df_co2_emsn_tot = df_co2_emsn_tot.loc[:,['Country Name', '1990', '1995', '2000', '2005', '2010', '2015', '2020']]
+#Sum up figures in each row
+df_co2_emsn_tot['Total'] = df_co2_emsn_tot.sum(axis=1)
+#Sum up figures in each row
+df_co2_emsn_tot['Total'] = df_co2_emsn_tot.sum(axis=1)
+#Find average figures in each row
+df_co2_emsn_tot['Avg'] = df_co2_emsn_tot.mean(axis=1)
+#Sorting dataframe by average column
+df_co2_emsn_tot = df_co2_emsn_tot.sort_values(by='Avg')
+
+# create a new figure
+plt.figure(figsize=(8,5))
+# add a stylesheet
+plt.style.use('ggplot')
+# plot the grapgh
+df_co2_emsn_tot.plot.barh('Country Name', 'Avg')
+# labeling the graph
+plt.ylabel('Country')
+plt.xlabel('Average Co2 emission(kt)')
+plt.legend(loc = 'best')
+# save plot as .png
+plt.savefig('Average Co2 emission of period 1990-2020.png', dpi=300, bbox_inches='tight')
+plt.show()
+### END: Plot Co2 emission across years in total
+
+### START: Plot Co2 emission across years in China
+df_co2_emsn_tot.loc['Column_Total']= df_co2_emsn_tot.sum(numeric_only=True, axis=0)
+# create a new figure
+plt.figure(figsize=(8,5))
+# add a stylesheet
+plt.style.use('ggplot')
+# plot the grapgh
+df_co2_emsn_tot.at['Column_Total','Country Name']='Total'
+df_co2_emsn_tot_row = df_co2_emsn_tot[df_co2_emsn_tot['Country Name'] == 'Total']
+df_co2_emsn_tot_row_tmp = df_co2_emsn_tot_row.loc[:,['1990', '1995', '2000', '2005', '2010', '2015', '2020']]
+df_co2_emsn_tot_row_tp = df_co2_emsn_tot_row_tmp.transpose()
+df_co2_emsn_tot_row_tp['Year'] = df_co2_emsn_tot_row_tp.index
+
+# create a new figure
+plt.figure(figsize=(8,5))
+# add a stylesheet
+plt.style.use('ggplot')
+# plot the grapgh
+df_co2_emsn_tot_row_tp.plot.bar('Year', 'Column_Total', color=(0.2, 0.4, 0.6, 0.6))
+# labeling the graph
+plt.ylabel('Co2 emmision')
+plt.xlabel('Year')
+plt.legend(loc = 'best')
+# save plot as .png
+plt.savefig('Total Co2 emission of period 1990-2020.png', dpi=300, bbox_inches='tight')
+plt.show()
+### END: Plot Co2 emission across years in China
