@@ -294,4 +294,4 @@ plt.show()
 
 
 print('\nSkewness of Methane emission is ', stats.skew(df_cor['Methane emission']))
-print('\nSkewness of Mortality rate is ', stats.skew(df_cor['Forest area']))
+print('\nSkewness of Forest area is ', stats.skew(df_cor['Forest area']))
