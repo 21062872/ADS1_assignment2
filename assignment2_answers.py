@@ -79,7 +79,8 @@ df_countries = df_climt_chg[df_climt_chg['Country Name'].isin(countries)]
 #Select records for specific indicators
 indecators = ['CO2 emissions (kt)', 'Urban population', 'Population, total', 'Forest area (% of land area)',
               'Arable land (% of land area)', 'Total greenhouse gas emissions (kt of CO2 equivalent)', 
-              'Methane emissions (kt of CO2 equivalent)', 'Mortality rate, under-5 (per 1,000 live births)']
+              'Methane emissions (kt of CO2 equivalent)', 'Mortality rate, under-5 (per 1,000 live births)',
+              'Agricultural land (sq. km)']
 df_cntry_ind = df_countries[df_countries['Indicator Name'].isin(indecators)]
 #Select only columns after year 1990
 df_cntry_yrs = df_cntry_ind.loc[:,['Country Name', 'Indicator Name', '1990', '1991', '1992',	
@@ -135,7 +136,7 @@ plt.style.use('ggplot')
 df_co2_emsn.plot(x='Country Name',
                 kind='bar',
                 stacked=False,
-                title='CO2 emission Over Time')
+                title='CO2 Emission Over Time')
 # labeling the graph
 plt.xlabel('Country')
 plt.ylabel('CO2 emission')
@@ -167,12 +168,40 @@ plt.xticks(df_ln_plot_tp.Year)
 # labeling the graph
 plt.xlabel('Year')
 plt.ylabel('SQ(KM)')
-plt.legend(loc = 'lower right', title ="Countries")
+plt.legend(loc = 'lower right', title ="Countries", bbox_to_anchor =(0.8, 0, 0.3, 0))
+plt.show()
+
+''' Plot: 4
+    Plot type: Line chart
+    Plot name: Agricultural land (sq. km)'''
+# create a new figure
+plt.figure(figsize=(8,5))
+# add a stylesheet
+plt.style.use('ggplot')
+# adding a title to the plot
+plt.title('Agricultaral Area')
+# plot the grapgh
+df_ln_plot = df_fnl[df_fnl['Indicator Name'] == 'Agricultural land (sq. km)']
+df_ln_plot = df_ln_plot.loc[:,['Country Name', '1990', '1995', '2000', '2005', '2010', '2015', '2020']]
+df_ln_plot_tp = df_ln_plot.set_index('Country Name').transpose()
+df_ln_plot_tp['Year'] = df_ln_plot_tp.index
+# plot the grapgh
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.China,  label = 'China')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.India,  label = 'India')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.USA,  label = 'USA')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.UK,  label = 'UK')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.Germany,  label = 'Germany')
+plt.plot(df_ln_plot_tp.Year, df_ln_plot_tp.SA,  label = 'SA')
+plt.xticks(df_ln_plot_tp.Year)
+# labeling the graph
+plt.xlabel('Year')
+plt.ylabel('SQ(KM)')
+plt.legend(loc = 'lower right', title ="Countries", bbox_to_anchor =(0.8, 0, 0.3, 0))
 plt.show()
 
 ''' Plot: 4
     Plot type: Pie chart
-    Plot name: CO2 emission in 2022'''
+    Plot name: CO2 emission in 2020'''
 df_co2_emsn_pc = df_fnl[df_fnl['Indicator Name'] == 'CO2 emissions (kt)']
 df_co2_emsn_pc = df_co2_emsn_pc.loc[:, ['Country Name', '2020']]
 
@@ -193,7 +222,7 @@ plt.legend(
               bbox_to_anchor =(1.1, 0, 0.5, 1)
           )   
 plt.tight_layout()
-plt.title("CO2 emission in 2022")
+plt.title("CO2 Emission in 2020")
 plt.show()
 
 ''' Plot: 4
@@ -264,5 +293,5 @@ plt.title('Forest area')
 plt.show()
 
 
-print('\nSkewness of Co2 emission is ', stats.skew(df_cor['Methane emission']))
+print('\nSkewness of Methane emission is ', stats.skew(df_cor['Methane emission']))
 print('\nSkewness of Mortality rate is ', stats.skew(df_cor['Forest area']))
