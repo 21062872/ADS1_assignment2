@@ -232,8 +232,8 @@ print('\nMaximum Co2 emission recorded in China is ', otp[0])
 print('\nMinimum Co2 emission recorded in China is ', otp[1])
 
 ''' Plot: 5
-    Plot type: correlation heatmap of USA
-    Plot name: Average Co2 emission per year'''
+    Plot type: correlation heatmap
+    Plot name: correlation heatmap of USA'''
 df_cor = df_fnl[df_fnl['Country Name'] == 'USA']
 df_cor = df_cor.loc[:,['Indicator Name', '1990', '1995', '2000', '2005', '2010', '2015', '2020']]
 df_cor = df_cor.set_index('Indicator Name').transpose()
@@ -249,6 +249,20 @@ df_cor.rename(columns = {'CO2 emissions (kt)':'CO2 emission',
 print(df_cor.corr())
 # plotting correlation heatmap
 dataplot = sb.heatmap(df_cor.corr(), cmap="YlGnBu", annot=True)
-  
 # displaying heatmap
 plt.show()
+
+#Identify skewness of dataset for USA  
+plt.figure()
+plt.hist(df_cor['Methane emission'], alpha=0.7, color='#ab34eb', edgecolor='black')
+plt.title('Methane emission')
+plt.show()
+
+plt.figure()
+plt.hist(df_cor['Forest area'], alpha=0.7, color='#ab34eb', edgecolor='black')
+plt.title('Forest area')
+plt.show()
+
+
+print('\nSkewness of Co2 emission is ', stats.skew(df_cor['Methane emission']))
+print('\nSkewness of Mortality rate is ', stats.skew(df_cor['Forest area']))
