@@ -199,7 +199,7 @@ plt.ylabel('SQ(KM)')
 plt.legend(loc = 'lower right', title ="Countries", bbox_to_anchor =(0.8, 0, 0.3, 0))
 plt.show()
 
-''' Plot: 4
+''' Plot: 5
     Plot type: Pie chart
     Plot name: CO2 emission in 2020'''
 df_co2_emsn_pc = df_fnl[df_fnl['Indicator Name'] == 'CO2 emissions (kt)']
@@ -225,7 +225,7 @@ plt.tight_layout()
 plt.title("CO2 Emission in 2020")
 plt.show()
 
-''' Plot: 4
+''' Plot: 6
     Plot type: horizontal bar chart
     Plot name: Average Co2 emission per year'''
 df_co2_emsn_tot = df_fnl[df_fnl['Indicator Name'] == 'CO2 emissions (kt)']
@@ -260,7 +260,7 @@ print('\nAverage Co2 emission of China per year is ', otp[2])
 print('\nMaximum Co2 emission recorded in China is ', otp[0])
 print('\nMinimum Co2 emission recorded in China is ', otp[1])
 
-''' Plot: 5
+''' Plot: 7
     Plot type: correlation heatmap
     Plot name: correlation heatmap of USA'''
 df_cor = df_fnl[df_fnl['Country Name'] == 'USA']
